@@ -1,0 +1,39 @@
+#!/usr/bin/ruby -S
+###psio: simple ruby script to watch the IO of a process
+### usage: psio <pid>
+def kmgte(x)
+        return x.to_s if(x<1024)
+                return ((((x/(1024.0                    )       )*100).to_i)/100.00).to_s + " K" if(x<1024*1024)
+                        return ((((x/(1024.0*1024               )       )*100).to_i.to_f/100)).to_s + " M" if(x<1024*1024*1024)
+                                return ((((x/(1024.0*1024*1024          )       )*100).to_i.to_f/100)).to_s + " G" if(x<1024*1024*1024*1024)
+                                        return ((((x/(1024.0*1024*1024*1024     )       )*100).to_i.to_f/100)).to_s + " T" if(x<1024*1024*1024*1024*1024)
+                                                #return ((((x/(1024*1024*1024*1024*1024))*100).to_i)/100.00).to_s + " E" if(x<1024*1024*1024*1024*1024)
+                                                        return ((((x/(1024.0*1024*1024*1024*1024)       )*100).to_i.to_f/100)).to_s + " E" if(x<1024*1024*1024*1024*1024*1024)
+
+end
+f="/proc/"+ ARGV[0] +"/io"
+
+ $stdout.puts "\n\n\n\n\n\n\n";
+
+if  File.file?(f) then 
+        o=`#{"cat "+f }`.split("\n")
+        sleep 1
+        while File.file?(f) do 
+#       o=`#{"cat "+f }`.split("\n")
+#
+#       sleep 1
+                $stdout.puts "\033[7A";
+                oo=`#{"cat " + f }`.split("\n")
+                for i in 0..5
+                x=o[i].split(" ")[0]
+                a=o[i].split(" ")[1].to_i
+                b=oo[i].split(" ")[1].to_i
+
+                c=b - a
+                $stdout.puts "" + x  + " " + kmgte(c) + "/s ( " + kmgte(a) +  " )                          \n" ;
+                end
+        #        $stdout.puts "\033[7A";
+                 sleep 1
+                 o=oo;
+        end
+end
